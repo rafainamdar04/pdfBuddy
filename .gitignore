@@ -1,0 +1,19 @@
+# Node.js
+**/node_modules/
+**/dist/
+**/build/
+npm-debug.log*
+
+# Python
+**/venv/
+__pycache__/
+*.py[cod]
+*.pkl
+
+# OS/system
+.DS_Store
+Thumbs.db
+
+# Env and keys
+.env
+*.env
