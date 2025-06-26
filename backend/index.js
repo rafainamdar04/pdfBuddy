@@ -7,9 +7,11 @@ const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// ✅ Allow only your frontend to access this backend
+app.use(cors({ origin: "https://pdfbuddy-gdtf.onrender.com" }));
+
 app.use(express.json());
 
 // Upload middleware
@@ -55,30 +57,27 @@ app.post("/api/upload", upload.single("pdf"), (req, res) => {
 // -----------------------------
 // ❓ Route: Ask a Question
 // -----------------------------
-app.post("/api/ask", (req, res) => {
+app.post("/api/ask", async (req, res) => {
   const question = req.body.question;
-  if (!question) return res.status(400).json({ error: "No question provided." });
-
   const python = spawn("python", ["python/ask_question.py", question]);
 
   let result = "";
-  let error = "";
 
   python.stdout.on("data", (data) => {
-    result += data.toString("utf-8");
+    result += data.toString();
   });
 
   python.stderr.on("data", (data) => {
-    error += data.toString("utf-8");
     console.error(`stderr: ${data}`);
   });
 
   python.on("close", () => {
-    if (error) {
-      return res.status(500).json({ error: "Question answering failed." });
+    try {
+      const json = JSON.parse(result.trim());
+      res.json(json);
+    } catch (e) {
+      res.status(500).send("Failed to parse answer.");
     }
-
-    return res.json({ answer: result.trim() });
   });
 });
 

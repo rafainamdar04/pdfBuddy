@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "./api"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";
 import "./App.css";
@@ -21,7 +21,7 @@ function App() {
     setSummary("");
     setAnswer("");
     try {
-      const res = await axios.post("http://localhost:5000/api/upload", formData);
+      const res = await API.post("/api/upload", formData);
       setSummary(res.data.summary);
     } catch (err) {
       alert("Failed to process PDF.");
@@ -34,7 +34,7 @@ function App() {
     setAnswer("");
     setAnswerLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/ask", { question });
+      const res = await API.post("/api/ask", { question });
       setAnswer(res.data.answer);
     } catch (err) {
       alert("Failed to get answer.");

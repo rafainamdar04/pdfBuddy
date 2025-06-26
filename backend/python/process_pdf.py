@@ -34,6 +34,7 @@ def main(file_path):
     vector_store = FAISS.from_documents(docs, embeddings)
     vector_store.save_local("faiss_index")
 
+    # Re-load to ensure proper deserialization for QA
     vector_store = FAISS.load_local("faiss_index", embeddings=embeddings, allow_dangerous_deserialization=True)
 
     llm = ChatOpenAI(
@@ -46,6 +47,7 @@ def main(file_path):
     qa = RetrievalQA.from_chain_type(llm=llm, retriever=vector_store.as_retriever())
     result = qa.invoke({"query": "Give a brief summary of this document in 3–5 sentences."})
 
+    # Return summary as JSON to Node.js
     print(json.dumps({"summary": result["result"]}))
 
 if __name__ == "__main__":
