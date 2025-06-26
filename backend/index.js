@@ -24,7 +24,7 @@ app.post("/api/upload", upload.single("pdf"), (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded." });
 
   const filePath = path.join(__dirname, req.file.path);
-  const python = spawn("python", ["python/process_pdf.py", filePath]);
+  const python = spawn("python3", ["python/process_pdf.py", filePath]);
 
   let result = "";
   let error = "";
