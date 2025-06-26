@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ✅ Allow only your frontend to access this backend
-app.use(cors({ origin: "https://pdfbuddy-gdtf.onrender.com" }));
+app.use(cors({ origin: "https://pdf-buddy-pgcixunk3-rafainamdar04s-projects.vercel.app" }));
 
 app.use(express.json());
 
