@@ -10,7 +10,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ✅ CORS: allow your deployed frontend only
-app.use(cors({ origin: "https://pdf-buddy-c07qwtmuw-rafainamdar04s-projects.vercel.app" }));
+const allowedOrigins = [
+  "https://pdf-buddy-c07qwtmuw-rafainamdar04s-projects.vercel.app",
+  "https://pdf-buddy.vercel.app", // optional main URL
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
+}));
+
 app.use(express.json());
 
 // 📁 Upload middleware
